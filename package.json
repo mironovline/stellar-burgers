@@ -97,6 +97,9 @@
   "eslintConfig": {
     "extends": [
       "plugin:storybook/recommended"
-    ]
+    ],
+    "rules": {
+    "arrow-parens": ["error", "as-needed"]
+    }
   }
 }

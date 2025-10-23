@@ -49,6 +49,7 @@ export const fetchWithRefresh = async <T>(
         (options.headers as { [key: string]: string }).authorization =
           refreshData.accessToken;
       }
+      setCookie('accessToken', refreshData.accessToken);
       const res = await fetch(url, options);
       return await checkResponse<T>(res);
     } else {

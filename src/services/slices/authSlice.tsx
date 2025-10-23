@@ -15,14 +15,14 @@ export type TAuthState = {
   user: TUser | null;
   isAuthenticated: boolean;
   loading: boolean;
-  error: string | null;
+  error: string | undefined;
 };
 
 export const initialState: TAuthState = {
   user: null,
   isAuthenticated: false,
   loading: false,
-  error: null
+  error: undefined
 };
 
 export const loginUser = createAsyncThunk(
@@ -51,10 +51,23 @@ export const logoutUser = createAsyncThunk('auth/logout', async () => {
   localStorage.removeItem('refreshToken');
 });
 
-export const getUser = createAsyncThunk('auth/getUser', async () => {
-  const response = await getUserApi();
-  return response.user;
-});
+export const getUser = createAsyncThunk(
+  'auth/getUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const accessToken = getCookie('accessToken');
+      if (!accessToken) {
+        return rejectWithValue('No token');
+      }
+      const response = await getUserApi();
+      return response.user;
+    } catch (error) {
+      deleteCookie('accessToken');
+      localStorage.removeItem('refreshToken');
+      return rejectWithValue(error);
+    }
+  }
+);
 
 export const updateUser = createAsyncThunk(
   'auth/updateUser',
@@ -69,7 +82,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearError: (state) => {
-      state.error = null;
+      state.error = undefined;
     }
   },
   extraReducers: (builder) => {
@@ -77,7 +90,7 @@ const authSlice = createSlice({
       // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = undefined;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -91,7 +104,7 @@ const authSlice = createSlice({
       // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = undefined;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
