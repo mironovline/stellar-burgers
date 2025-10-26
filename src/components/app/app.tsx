@@ -37,6 +37,13 @@ const AppContent = () => {
     dispatch(getUser());
   }, [dispatch]);
 
+  const getOrderNumber = () => {
+    const path = location.pathname.split('/');
+    const orderNumber = path[path.length - 1];
+    return orderNumber;
+  };
+  const orderNumber = getOrderNumber();
+
   return (
     <div className={styles.app}>
       <AppHeader />
@@ -103,7 +110,10 @@ const AppContent = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Информация по заказу' onClose={handleModalClose}>
+              <Modal
+                title={`Информация по заказу #${orderNumber}`}
+                onClose={handleModalClose}
+              >
                 <>
                   <OrderInfo />
                 </>
@@ -123,7 +133,10 @@ const AppContent = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Детали заказа' onClose={handleModalClose}>
+              <Modal
+                title={`Детали заказа ${orderNumber}`}
+                onClose={handleModalClose}
+              >
                 <>
                   <ProtectedRoute>
                     <OrderInfo />

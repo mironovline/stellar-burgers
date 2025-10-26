@@ -1,7 +1,12 @@
 // services/slices/orderSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { orderBurgerApi, getFeedsApi, getUserOrdersApi } from '@api';
+import {
+  orderBurgerApi,
+  getFeedsApi,
+  getUserOrdersApi,
+  getOrderByNumberApi
+} from '@api';
 
 export type TOrderState = {
   orderData: TOrder | null;
@@ -37,8 +42,16 @@ export const fetchFeeds = createAsyncThunk('order/fetchFeeds', async () => {
 export const fetchUserOrders = createAsyncThunk(
   'order/fetchUserOrders',
   async () => {
-    const response = await getUserOrdersApi(); // Эта функция должна возвращать заказы
+    const response = await getUserOrdersApi();
     return response.orders;
+  }
+);
+
+export const fetchOrderByNumber = createAsyncThunk(
+  'order/fetchByNumber',
+  async (orderNumber: number) => {
+    const response = await getOrderByNumberApi(orderNumber);
+    return response.orders[0];
   }
 );
 
@@ -83,6 +96,23 @@ const orderSlice = createSlice({
       .addCase(fetchUserOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Ошибка загрузки заказов';
+      })
+      .addCase(fetchOrderByNumber.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrderByNumber.fulfilled, (state, action) => {
+        state.loading = false;
+        if (
+          action.payload &&
+          !state.orders.find((order) => order._id === action.payload._id)
+        ) {
+          state.orders.push(action.payload);
+        }
+      })
+      .addCase(fetchOrderByNumber.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка загрузки заказа';
       });
   }
 });

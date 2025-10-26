@@ -20,7 +20,7 @@ export const Register: FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Очищаем ошибки при размонтировании
+  // Очищаем ошибки
   useEffect(
     () => () => {
       dispatch(clearError());

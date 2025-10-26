@@ -12,9 +12,7 @@ export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { loading, error, isAuthenticated } = useSelector(
-    (state) => state.auth
-  );
+  const { error, isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
