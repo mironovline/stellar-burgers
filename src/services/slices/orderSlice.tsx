@@ -1,7 +1,7 @@
 // services/slices/orderSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { orderBurgerApi, getFeedsApi } from '@api';
+import { orderBurgerApi, getFeedsApi, getUserOrdersApi } from '@api';
 
 export type TOrderState = {
   orderData: TOrder | null;
@@ -34,6 +34,14 @@ export const fetchFeeds = createAsyncThunk('order/fetchFeeds', async () => {
   return response;
 });
 
+export const fetchUserOrders = createAsyncThunk(
+  'order/fetchUserOrders',
+  async () => {
+    const response = await getUserOrdersApi(); // Эта функция должна возвращать заказы
+    return response.orders;
+  }
+);
+
 const orderSlice = createSlice({
   name: 'order',
   initialState,
@@ -63,6 +71,18 @@ const orderSlice = createSlice({
         state.orders = action.payload.orders;
         state.total = action.payload.total;
         state.totalToday = action.payload.totalToday;
+      })
+      .addCase(fetchUserOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload;
+      })
+      .addCase(fetchUserOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка загрузки заказов';
       });
   }
 });

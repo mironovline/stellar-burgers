@@ -214,6 +214,21 @@ export const getUserApi = () =>
     } as HeadersInit
   });
 
+export const getUserOrdersApi = (): Promise<{
+  orders: TOrder[];
+  success: boolean;
+}> =>
+  fetchWithRefresh<{ orders: TOrder[]; success: boolean }>(`${URL}/orders`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      authorization: getCookie('accessToken')
+    } as HeadersInit
+  }).then((data) => {
+    if (data?.success) return data;
+    return Promise.reject(data);
+  });
+
 export const updateUserApi = (user: Partial<TRegisterData>) =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     method: 'PATCH',
