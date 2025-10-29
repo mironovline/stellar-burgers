@@ -10,15 +10,9 @@ import { Preloader } from '../../components/ui';
 import { FC } from 'react';
 
 export const ConstructorPage: FC = () => {
-  const dispatch = useDispatch();
-  /** TODO: взять переменную из стора */
-
   const isIngredientsLoading = useSelector(
     (state) => state.ingredients.loading
   );
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
 
   return (
     <>
