@@ -77,7 +77,7 @@ const AppContent = () => {
             </ProtectedRoute>
           }
         />
-        <Route path='*' element={<NotFound404 />} />
+
         <Route
           path='/login'
           element={
@@ -126,6 +126,7 @@ const AppContent = () => {
             </ProtectedRoute>
           }
         />
+        <Route path='*' element={<NotFound404 />} />
       </Routes>
 
       {background && (

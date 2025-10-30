@@ -34,10 +34,7 @@ export const createOrder = createAsyncThunk(
   }
 );
 
-export const fetchFeeds = createAsyncThunk('order/fetchFeeds', async () => {
-  const response = await getFeedsApi();
-  return response;
-});
+export const fetchFeeds = createAsyncThunk('order/fetchFeeds', getFeedsApi);
 
 export const fetchUserOrders = createAsyncThunk(
   'order/fetchUserOrders',
