@@ -28,5 +28,5 @@
       "@selectors": ["src/services/selectors"]
     }
   },
-  "include": ["src", "../node_modules/cypress"]
+  "include": ["src", "../node_modules/cypress", "__tests__/rootReducer.test.ts"]
 }
