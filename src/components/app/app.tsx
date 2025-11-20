@@ -23,6 +23,7 @@ import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { getUser } from '../../services/slices/authSlice';
+import { fetchIngredients } from '../../services';
 
 const AppContent = () => {
   const dispatch = useDispatch();
@@ -35,6 +36,10 @@ const AppContent = () => {
   };
   useEffect(() => {
     dispatch(getUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   const getOrderNumber = () => {
